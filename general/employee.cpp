@@ -14,4 +14,5 @@ The maximum number of employees won't exceed 2000.
 */
 
 #include <iostream>
+#include <vector>
 
