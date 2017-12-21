@@ -54,20 +54,21 @@ public:
             return asteroids;
 
         // check the array for collisions - if none return asteroids
-        while (i < asteroids.size() - 1)
+        while (i < size - 1) {
             if (asteroids[i] > 0 && asteroids[i+1] < 0) {
                 collisions = true;
-                if ((asteroids[i+1] * -1 ) < asteroids[i])
+                if ((asteroids[i+1] * -1 ) < asteroids[i]) {
                     asteroids.erase(asteroids.begin() + i+1);
-                else if ( (asteroids[i+1] * -1) > asteroids[i])
+                } else if ( (asteroids[i+1] * -1) > asteroids[i]) {
                     asteroids.erase(asteroids.begin() + i);
-                else {
-                    cout << "Entered the right condition" << endl;
-                    asteroids.erase(asteroids.begin()+i, asteroids.begin()+i+2);
+                } else {
+                    asteroids.erase(asteroids.begin()+i);
+                    asteroids.erase(asteroids.begin()+i);
                 }
+                size = asteroids.size();
             } else
                 i++;
-
+        }
         if (collisions)
             return asteroidCollision(asteroids);
         else
