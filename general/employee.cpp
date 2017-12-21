@@ -15,4 +15,45 @@ The maximum number of employees won't exceed 2000.
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
+using namespace std;
+
+class Employee {
+public:
+    int id;
+    int imp;
+    vector<int> subs;
+};
+
+class Solution {
+private:
+    int getImpWithMap(unordered_map<int, Employee*> emap, int id)
+    {
+        int result = emap[id]->imp;
+        for (const auto i : emap[id]->subs)
+            result += getImpWithMap(emap, i);
+        return result;
+    }
+public:
+    int getImportance(vector<Employee*> employees, int id) {
+        int result = 0;
+        unordered_map<int, Employee *> emap;
+
+        for (const auto i : employees )
+            emap[i->id] = i;
+
+        result = getImpWithMap(emap, id);
+        return result;
+    }
+};
+
+int main()
+{
+    Solution sol;
+    Employee emp1 = {1, 2, {2}};
+    Employee emp2 = {2, 3, {}};
+    vector<Employee *> emps = {&emp1, &emp2};
+
+    cout << "Employee imp of 1 is : " << sol.getImportance(emps, 1) << endl;
+}
