@@ -87,9 +87,9 @@ public:
 int main()
 {
     Solution sol;
-    vector<int> asteroids = {8, -8};
+    vector<int> asteroids = {8, -8, 10, 20, -24, 2, -4, 5, -4};
 
-    sol.printvector(asteroids); 
+    sol.printvector(asteroids);
     asteroids = sol.asteroidCollision(asteroids);
     sol.printvector(asteroids);
 
