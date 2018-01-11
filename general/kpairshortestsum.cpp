@@ -37,55 +37,51 @@ using namespace std;
 class Solution {
 public:
     vector<pair<int, int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2, int k) {
-        int i = 0, size1 = nums1.size(), t_i = 0;
-        int j = 0, size2 = nums2.size(), t_j = 0;
+        int i = 0, size1 = nums1.size(), t_i = -1;
+        int j = 0, size2 = nums2.size(), t_j = -1;
         vector<pair<int, int>> result;
-        int limit = 0;
-        pair<int, int> p(nums1[i], nums2[j]);
-
-        while (i < size1 && j < size2 && k > 0) {
-            swap(t_i, i); swap(t_j,j);
-            p = {nums1[i], nums2[j]};
-            result.push_back(p);
-
-            if (i+1 < size1 && j+1 < size2) {
-                if ((nums1[i+1] + nums2[j]) < (nums1[i] + nums2[j+1]) {
-                    t_i = i;
-                    t_j = j+1;
-                    limit = nums1[i] + nums2[j+1];
-                    while (++i < size1 && nums1[i] + nums2[j] < limit && k > 0) {
-                        p = {nums1[i], nums2[j]};
-                        result.push_back(p);
-                        k--;
-                    }
-                } else {
-                    t_i = i+1;
-                    t_j = j;
-                    limit = nums1[i+1] + nums2[j];
-                    while (++j < size2 && nums1[i] + nums2[j] < limit && k > 0) {
-                        p = {nums1[i], nums2[j]};
-                        result.push_back(p);
-                        k--;
-                    }
-                }
-            } else
-                break;  // deal with last few outside this loop
-        }
-        if (i == size1-1) {
-            while (k > 0 && j < size2) {
-                p = {nums1[i], nums2[j];
-                result.push_back(p);
-                k--;
+        pair<int, int> p;
+        vector<pair<int, int>> boundQ;
+            
+        while (k > 0 && i < size1 && j < size2 ) {
+            result.push_back(make_pair(nums1[i],nums2[j])); 
+            k--;
+            if ((i == size1-1) && (j == size2 -1))
+                i++; // break by incrementing i to size1.
+            else if (i == size1-1 || j == size2-1 && boundQ.size() > 0) {
+                i = boundQ[boundQ.size() - 1].first;
+                j = boundQ[boundQ.size() - 1].second;
+                boundQ.pop_back();
+            } else if (boundQ.size() == 0 && i+1 == size-1) {
+                j++; continue;
+            } else if (boundQ.size() == 0 && j+1 == size-1) {
+                i++; continue;
+            } 
+            if (boundQ.size() > 0) {
+                t_i = boundQ[boundQ.size() - 1].first;
+                t_j = boundQ[boundQ.size() - 1].second;
             }
-        } else if (j == size2-1) {
-            while (k > 0 && j < size2) {
-                p = {nums1[i], nums2[j];
-                result.push_back(p);
-                k--;
+        
+            if ( nums1[i+1] + nums2[j] <= nums1[i] + nums2[j+1]) {
+                if (t_i >= 0 && (nums1[i+1] + nums2[j]) > (nums1[t_i] + nums2[t_j])) {
+                    boundQ.push_front(make_pair(i+1,j);
+                    i = t_i; j = t_j;
+                    boundQ.pop_back();
+                    t_i = -1; t_j = -1;
+                } else
+                    i++;
+            } else {
+                if (t_i >= 0 && (nums1[i] + nums2[j+1]) > (nums1[t_i] + nums2[t_j])) {
+                    boundQ.push_front(make_pair(i,j+1);
+                    i = t_i; j = t_j;
+                    boundQ.pop_back();
+                    t_i = -1; t_j = -1;
+                } else
+                    j++;
             }
+                
         }
 
         return result;
-
     }
 };
