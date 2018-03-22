@@ -38,13 +38,13 @@ public:
                         cout << "Inserting " << inCount << "idles before tasks[" << i << "] : " << tasks[i] << endl;
                         tasks.insert(tasks.begin()+i, inCount, zerochar); // pad it up with idles
                         i+=inCount;
-                    }       
+                    }
                 }
             }
             lkp[tasks[i]] = i;
             i++;
         }
-        
+
         return tasks.size();
     }
 };
