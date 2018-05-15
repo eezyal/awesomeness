@@ -30,11 +30,19 @@ All possible pairs are returned from the sequence:
 
 #include <iostream>
 #include <vector>
-#include <pair>
+#include <utility>
 
 using namespace std;
 
 class Solution {
+private:
+    void printvectorofpairs(vector<pair<int, int>> &vp) {
+        cout << "BoundQ = ";
+        for (auto p : vp)
+            cout << "(" << p.first << ", " << p.second << ") " ;
+        cout << endl;
+        return;
+    }
 public:
     vector<pair<int, int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2, int k) {
         int i = 0, size1 = nums1.size(), t_i = -1;
@@ -42,46 +50,101 @@ public:
         vector<pair<int, int>> result;
         pair<int, int> p;
         vector<pair<int, int>> boundQ;
-            
+
         while (k > 0 && i < size1 && j < size2 ) {
-            result.push_back(make_pair(nums1[i],nums2[j])); 
+            p = make_pair(nums1[i],nums2[j]);
+            cout << "Inserted " << "[" << nums1[i] << ", " << nums2[j] << "]" << endl;
+            printvectorofpairs(boundQ);
+            result.push_back(p);
             k--;
-            if ((i == size1-1) && (j == size2 -1))
-                i++; // break by incrementing i to size1.
-            else if (i == size1-1 || j == size2-1 && boundQ.size() > 0) {
-                i = boundQ[boundQ.size() - 1].first;
-                j = boundQ[boundQ.size() - 1].second;
-                boundQ.pop_back();
-            } else if (boundQ.size() == 0 && i+1 == size-1) {
-                j++; continue;
-            } else if (boundQ.size() == 0 && j+1 == size-1) {
-                i++; continue;
-            } 
             if (boundQ.size() > 0) {
-                t_i = boundQ[boundQ.size() - 1].first;
-                t_j = boundQ[boundQ.size() - 1].second;
-            }
-        
-            if ( nums1[i+1] + nums2[j] <= nums1[i] + nums2[j+1]) {
-                if (t_i >= 0 && (nums1[i+1] + nums2[j]) > (nums1[t_i] + nums2[t_j])) {
-                    boundQ.push_front(make_pair(i+1,j);
-                    i = t_i; j = t_j;
-                    boundQ.pop_back();
-                    t_i = -1; t_j = -1;
-                } else
-                    i++;
+                t_i = boundQ.back().first;
+                t_j = boundQ.back().second;
             } else {
-                if (t_i >= 0 && (nums1[i] + nums2[j+1]) > (nums1[t_i] + nums2[t_j])) {
-                    boundQ.push_front(make_pair(i,j+1);
-                    i = t_i; j = t_j;
-                    boundQ.pop_back();
-                    t_i = -1; t_j = -1;
-                } else
-                    j++;
+                t_i = -1; t_j = -1;
             }
-                
+
+            if ((i == size1-1) && (j == size2 -1))
+                break;
+            else if ((i == size1-1 || j == size2-1) && boundQ.size() > 0) {
+                i = t_i;  j = t_j;
+                cout << "2 : i = " << i << ", j = " << j << endl;
+                boundQ.pop_back();
+                continue;
+            } else if (boundQ.size() == 0 && i == size1-1) {
+                j++;
+                cout << "3 : i = " << i << ", j = " << j << endl;
+                continue;
+            } else if (boundQ.size() == 0 && j == size2-1) {
+                i++;
+                cout << "4 : i = " << i << ", j = " << j << endl;
+                continue;
+            }
+
+            if ( nums1[i+1] + nums2[j] <= nums1[i] + nums2[j+1]) {
+                if (t_i >= 0) {
+                    if (t_i == i+1 && t_j == j) {
+                        p = make_pair(i, j+1); boundQ.insert(boundQ.begin(), p);
+                        i++;
+                        cout << "5 : i = " << i << ", j = " << j << endl;
+                        boundQ.pop_back();
+                    } else if((nums1[i+1] + nums2[j]) >= (nums1[t_i] + nums2[t_j])) {
+                        p = make_pair(i, j+1); boundQ.insert(boundQ.begin(), p);
+                        p = make_pair(i+1, j); boundQ.insert(boundQ.begin(), p);
+                        i = t_i; j = t_j;
+                        cout << "6 : i = " << i << ", j = " << j << endl;
+                        boundQ.pop_back();
+                    } else {
+                        p = make_pair(i, j+1); boundQ.insert(boundQ.begin(), p);
+                        i++;
+                        cout << "7: i = " << i << ", j = " << j << endl;
+                    }
+                } else {
+                    p = make_pair(i, j+1); boundQ.insert(boundQ.begin(), p);
+                    i++;
+                    cout << "8 : i = " << i << ", j = " << j << endl;
+                }
+            } else {
+                if (t_i >= 0) {
+                    if (t_i == i && t_j == j+1) {
+                        p = make_pair(i+1, j); boundQ.push_back(p);
+                        j++;
+                        cout << "10 : i = " << i << ", j = " << j << endl;
+                        boundQ.pop_back();
+                    } else if ((nums1[i] + nums2[j+1]) >= (nums1[t_i] + nums2[t_j])) {
+                        p = make_pair(i, j+1); boundQ.insert(boundQ.begin(), p);
+                        p = make_pair(i+1, j); boundQ.insert(boundQ.begin(), p);
+                        i = t_i; j = t_j;
+                        cout << "11 : i = " << i << ", j = " << j << endl;
+                        boundQ.pop_back();
+                    } else {
+                        p = make_pair(i+1, j); boundQ.insert(boundQ.begin(), p);
+                        j++;
+                        cout << "12 : i = " << i << ", j = " << j << endl;
+                    }
+                } else {
+                    p = make_pair(i+1, j); boundQ.insert(boundQ.begin(), p);
+                    j++;
+                    cout << "13 : i = " << i << ", j = " << j << endl;
+                }
+            }
         }
 
         return result;
     }
 };
+
+int main()
+{
+    Solution sol;
+    vector<int> nums1 = {1, 2, 4};
+    vector<int> nums2 = {-1, 1, 2};
+
+    vector<pair<int, int>> result = sol.kSmallestPairs(nums1, nums2, 100);
+
+    cout << "Result: " << endl;
+    for (auto p : result){
+        cout << "[" << p.first << ", " << p.second << "] ";
+    }
+    cout << endl;
+}
