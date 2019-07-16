@@ -5,7 +5,7 @@
 
 using namespace std;
 class Solution {
- 
+
 public:
     int kSimilarity(string A, string B) {
       unordered_map<char, int> uniq;
@@ -20,15 +20,15 @@ public:
           numchars++;
         }
       }
-      
+
       vector< vector<int> > graph(numchars, vector<int>(0));
       for (size_t i = 0; i < A.size(); i++) {
         if (A[i] != B[i]) // no need to swap same chars
           graph[uniq[A[i]]].push_back(uniq[B[i]]);
       }
-      
+
       // Process Graph for cycles and update swapcount
-      for (size_t len = 2; len < numchars; len++) {
+      for (size_t len = 2; len <= numchars; len++) {
         // for each starting point - find all 'len' lengthed
         for (size_t st = 0; st < numchars; st++) {
           //find len lengthed path starting from st
@@ -38,7 +38,7 @@ public:
           vector< vector<int> > newpaths;
           paths.push_back({(int)st});
           paths_size = paths.size();
-          
+
           while (paths_size > 0 && (size_t)currlen < len) {
             for (size_t i = 0; i < paths_size; i++) {
               int pivo = paths[i].back();
@@ -70,7 +70,7 @@ public:
           swapcount += (cycles * (currlen - 1));
         }
       }
-      return swapcount;  
+      return swapcount;
     }
 };
 
@@ -85,5 +85,5 @@ int main()
 
 
   int ans = sol.kSimilarity(A, B);
-  cout << "k-similar number : " << ans << endl; 
+  cout << "k-similar number : " << ans << endl;
 }

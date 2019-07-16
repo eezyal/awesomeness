@@ -24,7 +24,7 @@ void sortInline(int *arr, int length)
     for (int i = 0; i < length; ++i)
         arr[i] = v[i];
 
-    return; // for now dummy
+    return;
 }
 
 void *runnableSum(void *args)
@@ -57,15 +57,17 @@ int main()
     for (int i = 0; i < len; ++i)
         cin >> arr[i];
 
+    int remaining = len % numthreads;
+    int chunk = (remaining == 0)?(len/numthreads):(len/numthreads)+1;
+
     for (int i = 0; i < numthreads - 1; i++) {
-        pargs[i].length = (len/numthreads);
+        pargs[i].length = chunk;
         pargs[i].arr = &arr[prev];
-        cout << "prev : " << prev << " | length : " << pargs[i].length << endl;
-        prev += pargs[i].length;
+        prev += chunk;
         pthread_create(&pthr[i], NULL, runnableSum, &pargs[i]);
     }
 
-    pargs[numthreads - 1].length =  (len%numthreads);
+    pargs[numthreads - 1].length =  (remaining == 0)?chunk:remaining;
     pargs[numthreads-1].arr = &arr[prev];
     pthread_create(&pthr[numthreads-1], NULL, runnableSum, &pargs[numthreads-1]);
 
