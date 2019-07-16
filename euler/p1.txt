@@ -1,0 +1,7 @@
+Sum of multiples of 3 and 5 under 1000
+
+Sum of multiples of 3  = 3 * (333 * 334) / 2 = 166833
+Sum of multiples of 5  = 5 * (199 * 200) / 2 =  99500
+Sum of multiples of 15 = 15 * (66 * 67) / 2  =  33165
+
+so answer is 166833 + 99500 - 33165 = 233168
